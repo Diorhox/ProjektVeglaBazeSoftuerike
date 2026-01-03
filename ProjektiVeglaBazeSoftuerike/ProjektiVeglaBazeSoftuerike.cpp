@@ -1,6 +1,7 @@
 ﻿// ProjektiVeglaBazeSoftuerike.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#include <ctime>
+#include <cstdlib> 
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -71,6 +72,24 @@ struct StudentProgress
     Student s;
     ProgressStructure progress;
 };
+
+
+struct WordOfTheDay
+{
+    Language lang;
+    string word;
+    string translation;
+    string example_sentence;
+};
+
+
+struct userprogress
+{
+    Student student;
+    int quizzes_taken;
+    int correct_answers;
+};
+;userprogress progres = { {}, 0, 0 };
 
 void showTranslations(Language lang)
 {
@@ -190,12 +209,20 @@ void showTranslations(Language lang)
         };
         break;
     }
-
+    case SeeWordOfTheDay:
+        SeeWordOfTheDay(s);
+        break;
+     
+    case SeeUserProgress:
+		SeeUsersProgress(s);    
+        break;
+	}
     for (const auto& pair : translations)
     {
         cout << pair.first << " -> " << pair.second << endl;
     }
 }
+   
 
 
 const QuizStructure quizes[] = {
@@ -300,6 +327,14 @@ const QuizStructure quizes[] = {
     }
 };
 
+const WordOfTheDay wordOfTheDayList[] = {
+    { GERMAN, "Haus", "House", "Das Haus ist groß." },
+    { ITALIAN, "Libro", "Book", "Il libro è interessante." },
+    { SPANISH, "Amigo", "Friend", "Mi amigo es muy simpático." },
+    { FRENCH, "Famille", "Family", "Ma famille est importante pour moi." },
+    { ALBANIAN, "Ujë", "Water", "Uji është i nevojshëm për jetën." }
+};
+
 
 // tash mu mvyn ose ma mire me than tash mu mduheet
 // me shku edhe me kriju strukturen per quiza ne baze te gjuhes se zgjedhur
@@ -392,6 +427,29 @@ void changePersonalDetails(Student& s)
 	cin >> s.phoneNumber;
     }
 
+void SeeWordOfTheDay(Student s)
+{
+    sran(time(0));
+
+	int totalWords = sizeof(wordOfTheDayList) / sizeof(WordOfTheDayList[0]);
+
+    while (true)
+    {
+		int index = rand() % totalWords;
+
+        if (wordOfTheDayList[index].language == s.languageChoice){
+
+        WordOfTheDay wod = wordOfTheDayList[index];
+        cout << "\n--- WORD OF THE DAY ---\n";
+        cout << "Word: " << wod.word << endl;
+        cout << "Translation: " << wod.translation << endl;
+        cout << "Example Sentence: " << wod.example_sentence << endl;
+        }
+    }
+
+}
+
+    
 
 Student krijoStudentin()
 {
@@ -527,8 +585,25 @@ void TakeTheQuiz(Student s)
         cout << "Your answer: " << results[i].userAnswer << " | Correct answer: " << results[i].correctAnswer
             << " | " << (results[i].correct ? "Correct" : "Incorrect") << "\n\n";
     }
+
+
+	progres.quzizes_taken += 1;
+
+    if (correctAnswers > progress.bestScore) {
+		progress.bestScore = correctAnswers;
+    
+    }
+    progres.currentLevel = 2;
 }
 
+void SeeUsersProgress(Student s)
+{
+    cout << "\n--- YOUR PROGRESS ---\n";
+    cout << "Language: " << returnSpecificLanguage(progress.current_language) << endl;
+    cout << "Current Level: " << progress.current_level.level_name << endl;
+    cout << "Quizzes Taken: " << progres.quizzes_taken << endl;
+    cout << "Best Score: " << progress.bestScore << " out of 4\n";
+}
 
 
 void executeOptionChoosenFromMenu(AppOptions option, Student s)
