@@ -1,5 +1,4 @@
 # **Language Learning Project in C++ Overview**
-Overview
 
 This project is a C++ console application designed to help users learn new languages interactively. Users can:
 
