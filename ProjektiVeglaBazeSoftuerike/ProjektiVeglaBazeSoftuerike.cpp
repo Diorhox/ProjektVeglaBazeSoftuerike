@@ -2,94 +2,446 @@
 //
 
 #include <iostream>
+#include <string>
+#include <unordered_map>
+#define NUMRI_GJUHEVE 5
+#define NUMRI_MUNDESIVE 5
+
 using namespace std;
 
-struct Progresi {
-    int numriKuizeve = 0;
-    int rezultatiMax = 0;
+
+
+enum Language
+{
+    GERMAN,
+    ITALIAN,
+    SPANISH,
+    FRENCH,
+    ALBANIAN
 };
-void perkthime() {
-    cout << "\nPERKTHIME BAZE (ANGLISHT → SHQIP)\n";
 
-    cout << "Hello        -> Pershendetje\n";
-    cout << "Bye          -> Lamtumire\n";
-    cout << "Thanks       -> Faleminderit\n";
-    cout << "Please       -> Ju lutem\n";
-    cout << "Sorry        -> Me fal\n";
-    cout << "Yes          -> Po\n";
-    cout << "No           -> Jo\n";
-    cout << "Friend       -> Shok / Mik\n";
-    cout << "Family       -> Familje\n";
-    cout << "Book         -> Liber\n";
-    cout << "School       -> Shkolle\n";
-    cout << "Teacher      -> Mesues\n";
-    cout << "Student      -> Student\n";
-    cout << "Water        -> Uje\n";
-    cout << "Food         -> Ushqim\n";
-    cout << "House        -> Shtepi\n";
-    cout << "Love         -> Dashuri\n";
-    cout << "Day          -> Dite\n";
-    cout << "Night        -> Nate\n";
+enum AppOptions
+{
+    TakeQuiz,
+    SeeTranslations,
+    SeeWordOfTheDay,
+    SeeUserProgress,
+    BackToStart
+};
+
+struct Student
+{
+    string emri;
+    string mbiemri;
+    Language languageChoice;
+};
+
+struct QuestionStructure
+{
+    string question;
+    string options[4];
+    int correct_index;
+};
+
+struct LevelStructure
+{
+    string level_name;
+    QuestionStructure questions[2];
+};
+
+struct QuizStructure
+{
+    Language language;
+    LevelStructure levels[2];
+};
+
+struct ProgressStructure
+{
+    Language current_language;
+    LevelStructure current_level;
+};
+
+struct StudentProgress
+{
+    Student s;
+    ProgressStructure progress;
+};
+
+
+const QuizStructure quizes[] = {
+    {
+        GERMAN,
+        {
+            {
+                "Introduction To Greetings",
+                {
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 1},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tsch�ss", "Ciao", "Au revoir"}, 1}
+                }
+            },
+            {
+                "Introduction to Numbers",
+                {
+                    {"What is '5'?", {"Cinco", "Cinq", "F�nf", "Pes�"}, 2},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjet�"}, 1}
+                }
+            }
+        }
+    },
+
+    {
+        FRENCH,
+        {
+            {
+                "Introduction To Greetings",
+                {
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 3},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tsch�ss", "Ciao", "Au revoir"}, 3}
+                }
+            },
+            {
+                "Introduction to Numbers",
+                {
+                    {"What is '5'?", {"Cinco", "Cinq", "F�nf", "Pes�"}, 1},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjet�"}, 0} // French: 'Dix' would be correct
+                }
+            }
+        }
+    },
+
+    {
+        ITALIAN,
+        {
+            {
+                "Introduction To Greetings",
+                {
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 2},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tsch�ss", "Addio", "Au revoir"}, 2}
+                }
+            },
+            {
+                "Introduction to Numbers",
+                {
+                    {"What is '5'?", {"Cinco", "Cinq", "Cinque", "Pes�"}, 2},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Dieci", "Dhjet�"}, 2}
+                }
+            }
+        }
+    },
+
+    {
+        SPANISH,
+        {
+            {
+                "Introduction To Greetings",
+                {
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 0},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tsch�ss", "Ciao", "Au revoir"}, 0}
+                }
+            },
+            {
+                "Introduction to Numbers",
+                {
+                    {"What is '5'?", {"Cinco", "Cinq", "F�nf", "Pes�"}, 0},
+                    {"How do you say '10'?", {"Diez", "Zehn", "Ten", "Dhjet�"}, 0}
+                }
+            }
+        }
+    },
+
+    {
+        ALBANIAN,
+        {
+            {
+                "Introduction To Greetings",
+                {
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "P�rsh�ndetje"}, 3},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tsch�ss", "Ciao", "Mirupafshim"}, 3}
+                }
+            },
+            {
+                "Introduction to Numbers",
+                {
+                    {"What is '5'?", {"Cinco", "Cinq", "F�nf", "Pes�"}, 3},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjet�"}, 3}
+                }
+            }
+        }
+    }
+};
+
+
+// tash mu mvyn ose ma mire me than tash mu mduheet
+// me shku edhe me kriju strukturen per quiza ne baze te gjuhes se zgjedhur
+
+
+
+
+string returnSpecificLanguage(Language lang)
+{
+    switch (lang)
+    {
+    case GERMAN:
+        return "German";
+    case ITALIAN:
+        return "Italian";
+    case SPANISH:
+        return "Spanish";
+    case FRENCH:
+        return "French";
+    case ALBANIAN:
+        return "Albanian";
+    default:
+        return "";
+    }
 }
-void Kuizi(Progresi p) {
-    int piket = 0;
-    char pergjigja;
 
-    cout << "\nKuiz (ANGLISHT) \n";
+string returnSpecificOption(AppOptions option)
+{
+    switch (option) {
+    case TakeQuiz:
+        return "Continue Your Quizes";
+    case SeeTranslations:
+        return "See Some Of The Basic Word Translations";
+    case SeeWordOfTheDay:
+        return "See The Word Of The Day!";
+    case SeeUserProgress:
+        return "See Your Progress So Far!";
+    case BackToStart:
+        return "Go Back!";
+    default:
+        return "";
+    }
+}
 
-    cout << "1. Hello ne anglisht do te thote?\n";
-    cout << "a) Pershendetje\nb) Lamtumire\n";
-    cin >> pergjigja;
-    if (pergjigja == 'a') piket++;
+Language returnLanguageChoosen(char choice)
+{
+    switch (choice)
+    {
+    case 'G':
+    case 'g':
+        return GERMAN;
+    case 'I':
+    case 'i':
+        return ITALIAN;
+    case 'S':
+    case 's':
+        return SPANISH;
+    case 'F':
+    case 'f':
+        return FRENCH;
+    case 'A':
+    case 'a':
+        return ALBANIAN;
+    default:
+        return GERMAN; // Default value
+    }
+}
 
-    cout << "2. Thank you ne anglisht do te thote?\n";
-    cout << "a) Ju lutem\nb) Faleminderit\n";
-    cin >> pergjigja;
-    if (pergjigja == 'b') piket++;
+void displayPersonalDetails(Student s)
+{
+    cout << "Emri: " << s.emri << endl;
+    cout << "Mbiemri: " << s.mbiemri << endl;
+    cout << "Gjuha Zgjedhur: " << returnSpecificLanguage(s.languageChoice) << endl;
+}
 
-    cout << "3. Book ne anglisht do te thote?\n";
-    cout << "a) Liber\nb) Shkolle\n";
-    cin >> pergjigja;
-    if (pergjigja == 'a') piket++;
+Student krijoStudentin()
+{
+    Student newStudent;
+    string languages[] = { returnSpecificLanguage(GERMAN), returnSpecificLanguage(ITALIAN), returnSpecificLanguage(SPANISH), returnSpecificLanguage(FRENCH),
+        returnSpecificLanguage(ALBANIAN) };
+    cout << "Pershendetje!" << endl;
+    cout << "Ju lutem jepni emrin tuaj: " << endl;
 
-    cout << "4. Water ne anglisht do te thote?\n";
-    cout << "a) Uje\nb) Ushqim\n";
-    cin >> pergjigja;
-    if (pergjigja == 'a') piket++;
+    cin >> newStudent.emri;
 
-    cout << "5. Friend ne anglisht do te thote?\n";
-    cout << "a) Armik\nb) Mik\n";
-    cin >> pergjigja;
-    if (pergjigja == 'b') piket++;
+    cout << "Jepni mbiemrin tuaj: " << endl;
+    cin >> newStudent.mbiemri;
+    cout << "Zgjidhni gjuhen qe doni te mesoni: " << endl;
 
-    cout << "6. House ne anglisht do te thote?\n";
-    cout << "a) Shtepi\nb) Dite\n";
-    cin >> pergjigja;
-    if (pergjigja == 'a') piket++;
+    char choice;
 
-    p.numriKuizeve++;
-    if (piket > p.rezultatiMax)
-        p.rezultatiMax = piket;
+    for (int i = 0; i < NUMRI_GJUHEVE; i++) {
+        cout << i + 1 << ". " << languages[i] << "( " << languages[i][0] << " )" << endl;
+    }
 
-    cout << "\nRezultati juaj: " << piket << "/6\n";
+    cin >> choice;
+
+    newStudent.languageChoice = returnLanguageChoosen(choice);
+
+    displayPersonalDetails(newStudent);
+
+    return newStudent;
+}
+
+AppOptions returnParticularOption(int choosen_option)
+{
+    switch (choosen_option)
+    {
+    case 1:
+        return TakeQuiz;
+    case 2:
+        return SeeTranslations;
+    case 3:
+        return SeeWordOfTheDay;
+    case 4:
+        return SeeUserProgress;
+    case 5:
+        return BackToStart;
+    }
+}
+
+struct QuizResult
+{
+    string question;
+    string userAnswer;
+    string correctAnswer;
+    bool correct;
+};
+
+void TakeTheQuiz(Student s)
+{
+    int totalQuestions = 0;
+    int correctAnswers = 0;
+    QuizResult results[4];
+    int resultIndex = 0;
+
+    const QuizStructure* selectedQuiz = nullptr;
+    for (int i = 0; i < 5; i++)
+    {
+        if (quizes[i].language == s.languageChoice)
+        {
+            selectedQuiz = &quizes[i];
+            break;
+        }
+    }
+
+    if (selectedQuiz == nullptr)
+    {
+        cout << "Quiz not found for your chosen language!" << endl;
+        return;
+    }
+
+    for (int lvl = 0; lvl < 2; lvl++)
+    {
+        LevelStructure currentLevel = selectedQuiz->levels[lvl];
+        cout << "\nLevel: " << currentLevel.level_name << endl;
+
+        for (int q = 0; q < 2; q++)
+        {
+            QuestionStructure currentQuestion = currentLevel.questions[q];
+            totalQuestions++;
+
+            cout << "\nQ" << totalQuestions << ": " << currentQuestion.question << endl;
+
+            for (int opt = 0; opt < 4; opt++)
+            {
+                cout << opt + 1 << ". " << currentQuestion.options[opt] << endl;
+            }
+
+            int userAnswer;
+            cout << "Your answer (enter number 1-4): ";
+            cin >> userAnswer;
+
+            while (cin.fail() || userAnswer < 1 || userAnswer > 4)
+            {
+                cin.clear();
+                cin.ignore(1000, '\n');
+                cout << "Invalid input. Enter number 1-4: ";
+                cin >> userAnswer;
+            }
+
+            string userAnswerText = currentQuestion.options[userAnswer - 1];
+            string correctAnswerText = currentQuestion.options[currentQuestion.correct_index];
+            bool isCorrect = (userAnswer - 1 == currentQuestion.correct_index);
+
+            if (isCorrect)
+            {
+                cout << "Correct!\n";
+                correctAnswers++;
+            }
+            else
+            {
+                cout << "Incorrect! Correct answer: " << correctAnswerText << "\n";
+            }
+
+            results[resultIndex++] = { currentQuestion.question, userAnswerText, correctAnswerText, isCorrect };
+        }
+    }
+
+    cout << "\n=== Quiz Completed ===\n";
+    cout << "You got " << correctAnswers << " out of " << totalQuestions << " correct.\n";
+
+    cout << "\nDetailed results:\n";
+    for (int i = 0; i < totalQuestions; i++)
+    {
+        cout << "Q" << i + 1 << ": " << results[i].question << "\n";
+        cout << "Your answer: " << results[i].userAnswer << " | Correct answer: " << results[i].correctAnswer
+            << " | " << (results[i].correct ? "Correct" : "Incorrect") << "\n\n";
+    }
 }
 
 
+
+void executeOptionChoosenFromMenu(AppOptions option, Student s)
+{
+    switch (option)
+    {
+    case TakeQuiz:
+        TakeTheQuiz(s);
+        break;
+    case SeeTranslations:
+        // Ka me u implementu ma vone
+        break;
+    case SeeWordOfTheDay:
+        // Ka me u implementu ma vone
+        break;
+    case SeeUserProgress:
+        // Ka me u implementu ma vone
+        break;
+    case BackToStart:
+        // Ka me u implementu ma vone
+        break;
+    }
+}
+
+
+void displayOptions()
+{
+    string options[] = {
+        returnSpecificOption(TakeQuiz),
+        returnSpecificOption(SeeTranslations),
+        returnSpecificOption(SeeWordOfTheDay),
+        returnSpecificOption(SeeUserProgress),
+        returnSpecificOption(BackToStart)
+    };
+
+    cout << "Qfare Deshironi Te Beni Ne Programin Tone: " << endl;
+
+    int choosenOption;
+
+    for (int i = 0; i < NUMRI_MUNDESIVE; i++) {
+        cout << i + 1 << "." << options[i] << " ( " << i + 1 << " ) " << endl;
+    }
+
+}
+
+AppOptions chooseOption()
+{
+    displayOptions();
+
+    int choosenOption;
+    cin >> choosenOption;
+
+    return returnParticularOption(choosenOption);
+}
 
 int main()
 {
-   
-Progresi progres;
+    Student studenti = krijoStudentin();
+    AppOptions optionChoosen = chooseOption();
+    executeOptionChoosenFromMenu(optionChoosen, studenti);
+
 
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
