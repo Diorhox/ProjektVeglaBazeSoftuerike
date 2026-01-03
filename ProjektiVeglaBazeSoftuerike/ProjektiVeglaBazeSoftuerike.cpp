@@ -450,6 +450,8 @@ void SeeWordOfTheDay_(Student s)
 
 
 
+
+
 Student krijoStudentin()
 {
     Student newStudent;
