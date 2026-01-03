@@ -1,4 +1,4 @@
-// ProjektiVeglaBazeSoftuerike.cpp : This file contains the 'main' function. Program execution begins and ends there.
+ï»¿// ProjektiVeglaBazeSoftuerike.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
@@ -76,14 +76,14 @@ const QuizStructure quizes[] = {
                 "Introduction To Greetings",
                 {
                     {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 1},
-                    {"How do you say 'Goodbye'?", {"Adios", "Tschüss", "Ciao", "Au revoir"}, 1}
+                    {"How do you say 'Goodbye'?", {"Adios", "Tschï¿½ss", "Ciao", "Au revoir"}, 1}
                 }
             },
             {
                 "Introduction to Numbers",
                 {
-                    {"What is '5'?", {"Cinco", "Cinq", "Fünf", "Pesë"}, 2},
-                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetë"}, 1}
+                    {"What is '5'?", {"Cinco", "Cinq", "Fï¿½nf", "Pesï¿½"}, 2},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetï¿½"}, 1}
                 }
             }
         }
@@ -96,14 +96,14 @@ const QuizStructure quizes[] = {
                 "Introduction To Greetings",
                 {
                     {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 3},
-                    {"How do you say 'Goodbye'?", {"Adios", "Tschüss", "Ciao", "Au revoir"}, 3}
+                    {"How do you say 'Goodbye'?", {"Adios", "Tschï¿½ss", "Ciao", "Au revoir"}, 3}
                 }
             },
             {
                 "Introduction to Numbers",
                 {
-                    {"What is '5'?", {"Cinco", "Cinq", "Fünf", "Pesë"}, 1},
-                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetë"}, 0} // French: 'Dix' would be correct
+                    {"What is '5'?", {"Cinco", "Cinq", "Fï¿½nf", "Pesï¿½"}, 1},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetï¿½"}, 0} // French: 'Dix' would be correct
                 }
             }
         }
@@ -116,14 +116,14 @@ const QuizStructure quizes[] = {
                 "Introduction To Greetings",
                 {
                     {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 2},
-                    {"How do you say 'Goodbye'?", {"Adios", "Tschüss", "Addio", "Au revoir"}, 2}
+                    {"How do you say 'Goodbye'?", {"Adios", "Tschï¿½ss", "Addio", "Au revoir"}, 2}
                 }
             },
             {
                 "Introduction to Numbers",
                 {
-                    {"What is '5'?", {"Cinco", "Cinq", "Cinque", "Pesë"}, 2},
-                    {"How do you say '10'?", {"Ten", "Zehn", "Dieci", "Dhjetë"}, 2}
+                    {"What is '5'?", {"Cinco", "Cinq", "Cinque", "Pesï¿½"}, 2},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Dieci", "Dhjetï¿½"}, 2}
                 }
             }
         }
@@ -136,14 +136,14 @@ const QuizStructure quizes[] = {
                 "Introduction To Greetings",
                 {
                     {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Bonjour"}, 0},
-                    {"How do you say 'Goodbye'?", {"Adios", "Tschüss", "Ciao", "Au revoir"}, 0}
+                    {"How do you say 'Goodbye'?", {"Adios", "Tschï¿½ss", "Ciao", "Au revoir"}, 0}
                 }
             },
             {
                 "Introduction to Numbers",
                 {
-                    {"What is '5'?", {"Cinco", "Cinq", "Fünf", "Pesë"}, 0},
-                    {"How do you say '10'?", {"Diez", "Zehn", "Ten", "Dhjetë"}, 0}
+                    {"What is '5'?", {"Cinco", "Cinq", "Fï¿½nf", "Pesï¿½"}, 0},
+                    {"How do you say '10'?", {"Diez", "Zehn", "Ten", "Dhjetï¿½"}, 0}
                 }
             }
         }
@@ -155,15 +155,15 @@ const QuizStructure quizes[] = {
             {
                 "Introduction To Greetings",
                 {
-                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Përshëndetje"}, 3},
-                    {"How do you say 'Goodbye'?", {"Adios", "Tschüss", "Ciao", "Mirupafshim"}, 3}
+                    {"How do you say 'Hello'?", {"Hola", "Hallo", "Ciao", "Pï¿½rshï¿½ndetje"}, 3},
+                    {"How do you say 'Goodbye'?", {"Adios", "Tschï¿½ss", "Ciao", "Mirupafshim"}, 3}
                 }
             },
             {
                 "Introduction to Numbers",
                 {
-                    {"What is '5'?", {"Cinco", "Cinq", "Fünf", "Pesë"}, 3},
-                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetë"}, 3}
+                    {"What is '5'?", {"Cinco", "Cinq", "Fï¿½nf", "Pesï¿½"}, 3},
+                    {"How do you say '10'?", {"Ten", "Zehn", "Diez", "Dhjetï¿½"}, 3}
                 }
             }
         }
