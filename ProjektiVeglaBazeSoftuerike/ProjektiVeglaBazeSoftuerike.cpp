@@ -36,10 +36,10 @@ struct Student
     string emri;
     string mbiemri;
     Language languageChoice;
-	string username = "";
-	string email = "";
-	string birthdate = "";
-	string phoneNumber = "";
+    string username = "";
+    string email = "";
+    string birthdate = "";
+    string phoneNumber = "";
 };
 
 struct QuestionStructure
@@ -86,14 +86,15 @@ struct WordOfTheDay
 struct userprogress
 {
     Student student;
-    int quizzes_taken;
-    int correct_answers;
+    int quizzes_taken = 0;
+    int bestScore = 0;
+    int currentLevel = 0;
 };
-;userprogress progres = { {}, 0, 0 };
+
+userprogress progres;
 
 void showTranslations(Language lang)
 {
-    cout << "\n--- BASIC TRANSLATIONS ---\n";
 
     unordered_map<string, string> translations;
 
@@ -209,20 +210,14 @@ void showTranslations(Language lang)
         };
         break;
     }
-    case SeeWordOfTheDay:
-        SeeWordOfTheDay(s);
-        break;
-     
-    case SeeUserProgress:
-		SeeUsersProgress(s);    
-        break;
-	}
+
+
     for (const auto& pair : translations)
     {
         cout << pair.first << " -> " << pair.second << endl;
     }
 }
-   
+
 
 
 const QuizStructure quizes[] = {
@@ -336,10 +331,6 @@ const WordOfTheDay wordOfTheDayList[] = {
 };
 
 
-// tash mu mvyn ose ma mire me than tash mu mduheet
-// me shku edhe me kriju strukturen per quiza ne baze te gjuhes se zgjedhur
-
-
 
 
 string returnSpecificLanguage(Language lang)
@@ -374,8 +365,8 @@ string returnSpecificOption(AppOptions option)
         return "See Your Progress So Far!";
     case BackToStart:
         return "Go Back!";
-	case viewProfile:
-		return "View Your Profile!";
+    case viewProfile:
+        return "View Your Profile!";
     default:
         return "";
     }
@@ -401,7 +392,7 @@ Language returnLanguageChoosen(char choice)
     case 'a':
         return ALBANIAN;
     default:
-        return GERMAN; // Default value
+        return GERMAN;
     }
 }
 
@@ -410,46 +401,44 @@ void displayPersonalDetails(Student s)
     cout << "Emri: " << s.emri << endl;
     cout << "Mbiemri: " << s.mbiemri << endl;
     cout << "Gjuha Zgjedhur: " << returnSpecificLanguage(s.languageChoice) << endl;
-	cout << "Username: " << s.username << endl;
-	cout << "Email: " << s.email << endl;
-	cout << "Birthdate: " << s.birthdate << endl;
+    cout << "Username: " << s.username << endl;
+    cout << "Email: " << s.email << endl;
+    cout << "Birthdate: " << s.birthdate << endl;
 }
 void changePersonalDetails(Student& s)
 {
     cout << "Nese nuk doni te ndryshoni nje fushe, shtypni '-' ne vend te saj." << endl;
-	cout << "Vendosni username te ri: ";
-	cin >> s.username;
-	cout << "Vendosni email te ri: ";
-	cin >> s.email;
-	cout << "Vendosni date te lindjes (DD/MM/YYYY): ";
-	cin >> s.birthdate;
-	cout << "Vendosni numrin e telefonit: ";
-	cin >> s.phoneNumber;
-    }
-
-void SeeWordOfTheDay(Student s)
-{
-    sran(time(0));
-
-	int totalWords = sizeof(wordOfTheDayList) / sizeof(WordOfTheDayList[0]);
-
-    while (true)
-    {
-		int index = rand() % totalWords;
-
-        if (wordOfTheDayList[index].language == s.languageChoice){
-
-        WordOfTheDay wod = wordOfTheDayList[index];
-        cout << "\n--- WORD OF THE DAY ---\n";
-        cout << "Word: " << wod.word << endl;
-        cout << "Translation: " << wod.translation << endl;
-        cout << "Example Sentence: " << wod.example_sentence << endl;
-        }
-    }
-
+    cout << "Vendosni username te ri: ";
+    cin >> s.username;
+    cout << "Vendosni email te ri: ";
+    cin >> s.email;
+    cout << "Vendosni date te lindjes (DD/MM/YYYY): ";
+    cin >> s.birthdate;
+    cout << "Vendosni numrin e telefonit: ";
+    cin >> s.phoneNumber;
 }
 
-    
+void SeeWordOfTheDay_(Student s)
+{
+    srand(time(0));
+
+    int totalWords = sizeof(wordOfTheDayList) / sizeof(wordOfTheDayList[0]);
+    int index;
+
+
+    do {
+        index = rand() % totalWords;
+    } while (wordOfTheDayList[index].lang != s.languageChoice);
+
+    WordOfTheDay wod = wordOfTheDayList[index];
+
+    cout << "\n--- WORD OF THE DAY ---\n";
+    cout << "Word: " << wod.word << endl;
+    cout << "Translation: " << wod.translation << endl;
+    cout << "Example Sentence: " << wod.example_sentence << endl;
+}
+
+
 
 Student krijoStudentin()
 {
@@ -492,8 +481,10 @@ AppOptions returnParticularOption(int choosen_option)
         return SeeUserProgress;
     case 5:
         return BackToStart;
-	case 6:
-		return viewProfile;
+    case 6:
+        return viewProfile;
+    default:
+        return TakeQuiz;
     }
 }
 
@@ -522,7 +513,7 @@ void TakeTheQuiz(Student s)
         }
     }
 
-    if (selectedQuiz == nullptr)
+    if (!selectedQuiz)
     {
         cout << "Quiz not found for your chosen language!" << endl;
         return;
@@ -539,21 +530,20 @@ void TakeTheQuiz(Student s)
             totalQuestions++;
 
             cout << "\nQ" << totalQuestions << ": " << currentQuestion.question << endl;
-
             for (int opt = 0; opt < 4; opt++)
             {
                 cout << opt + 1 << ". " << currentQuestion.options[opt] << endl;
             }
 
             int userAnswer;
-            cout << "Your answer (enter number 1-4): ";
+            cout << "Your answer (1-4): ";
             cin >> userAnswer;
 
             while (cin.fail() || userAnswer < 1 || userAnswer > 4)
             {
                 cin.clear();
                 cin.ignore(1000, '\n');
-                cout << "Invalid input. Enter number 1-4: ";
+                cout << "Invalid input. Enter 1-4: ";
                 cin >> userAnswer;
             }
 
@@ -561,18 +551,24 @@ void TakeTheQuiz(Student s)
             string correctAnswerText = currentQuestion.options[currentQuestion.correct_index];
             bool isCorrect = (userAnswer - 1 == currentQuestion.correct_index);
 
-            if (isCorrect)
-            {
+            if (isCorrect) {
                 cout << "Correct!\n";
                 correctAnswers++;
             }
-            else
-            {
+            else {
                 cout << "Incorrect! Correct answer: " << correctAnswerText << "\n";
             }
 
             results[resultIndex++] = { currentQuestion.question, userAnswerText, correctAnswerText, isCorrect };
         }
+
+        progres.currentLevel = lvl + 1;
+    }
+
+    progres.quizzes_taken += 1;
+
+    if (correctAnswers > progres.bestScore) {
+        progres.bestScore = correctAnswers;
     }
 
     cout << "\n=== Quiz Completed ===\n";
@@ -582,27 +578,19 @@ void TakeTheQuiz(Student s)
     for (int i = 0; i < totalQuestions; i++)
     {
         cout << "Q" << i + 1 << ": " << results[i].question << "\n";
-        cout << "Your answer: " << results[i].userAnswer << " | Correct answer: " << results[i].correctAnswer
+        cout << "Your answer: " << results[i].userAnswer
+            << " | Correct answer: " << results[i].correctAnswer
             << " | " << (results[i].correct ? "Correct" : "Incorrect") << "\n\n";
     }
-
-
-	progres.quzizes_taken += 1;
-
-    if (correctAnswers > progress.bestScore) {
-		progress.bestScore = correctAnswers;
-    
-    }
-    progres.currentLevel = 2;
 }
 
 void SeeUsersProgress(Student s)
 {
     cout << "\n--- YOUR PROGRESS ---\n";
-    cout << "Language: " << returnSpecificLanguage(progress.current_language) << endl;
-    cout << "Current Level: " << progress.current_level.level_name << endl;
+    cout << "Language: " << returnSpecificLanguage(s.languageChoice) << endl;
+    cout << "Current Level: " << progres.currentLevel << endl;
     cout << "Quizzes Taken: " << progres.quizzes_taken << endl;
-    cout << "Best Score: " << progress.bestScore << " out of 4\n";
+    cout << "Best Score: " << progres.bestScore << " out of 4\n";
 }
 
 
@@ -613,33 +601,38 @@ void executeOptionChoosenFromMenu(AppOptions option, Student s)
     case TakeQuiz:
         TakeTheQuiz(s);
         break;
+
     case SeeTranslations:
         showTranslations(s.languageChoice);
         break;
+
     case SeeWordOfTheDay:
-        // Ka me u implementu ma vone
+        SeeWordOfTheDay_(s);
         break;
+
     case SeeUserProgress:
-        // Ka me u implementu ma vone
+        SeeUsersProgress(s);
         break;
+
     case BackToStart:
-        // Ka me u implementu ma vone
+        cout << "Returning to start...\n";
         break;
-	case viewProfile:
-		cout << "\n--- Your Profile Details ---\n";
-		displayPersonalDetails(s);
-		cout << "A doni te ndryshoni detajet personale? (Y/N): ";
-		char changeChoice;
-		cin >> changeChoice;
+
+    case viewProfile:
+        cout << "\n--- Your Profile Details ---\n";
+        displayPersonalDetails(s);
+        cout << "Do you want to change your personal details? (Y/N): ";
+        char changeChoice;
+        cin >> changeChoice;
         if (changeChoice == 'Y' || changeChoice == 'y') {
             changePersonalDetails(s);
-            cout << "Detajet personale u ndryshuan me sukses!\n";
+            cout << "Personal details updated successfully!\n";
             displayPersonalDetails(s);
-		}
-
-		break;
+        }
+        break;
     }
 }
+
 
 
 void displayOptions()
@@ -650,7 +643,7 @@ void displayOptions()
         returnSpecificOption(SeeWordOfTheDay),
         returnSpecificOption(SeeUserProgress),
         returnSpecificOption(BackToStart),
-		returnSpecificOption(viewProfile)
+        returnSpecificOption(viewProfile)
     };
 
     cout << "Qfare Deshironi Te Beni Ne Programin Tone: " << endl;
