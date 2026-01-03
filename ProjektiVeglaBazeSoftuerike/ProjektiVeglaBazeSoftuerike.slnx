@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="ProjektiVeglaBazeSoftuerike.vcxproj" />
+  <Project Path="ProjektiVeglaBazeSoftuerike.vcxproj" Id="4e72f32a-6cef-4dff-8501-b8ebd01d5337" />
 </Solution>
