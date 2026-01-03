@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 #define NUMRI_GJUHEVE 5
-#define NUMRI_MUNDESIVE 5
+#define NUMRI_MUNDESIVE 6
 
 using namespace std;
 
@@ -26,7 +26,8 @@ enum AppOptions
     SeeTranslations,
     SeeWordOfTheDay,
     SeeUserProgress,
-    BackToStart
+    BackToStart,
+    viewProfile
 };
 
 struct Student
@@ -34,6 +35,10 @@ struct Student
     string emri;
     string mbiemri;
     Language languageChoice;
+	string username = "";
+	string email = "";
+	string birthdate = "";
+	string phoneNumber = "";
 };
 
 struct QuestionStructure
@@ -334,6 +339,8 @@ string returnSpecificOption(AppOptions option)
         return "See Your Progress So Far!";
     case BackToStart:
         return "Go Back!";
+	case viewProfile:
+		return "View Your Profile!";
     default:
         return "";
     }
@@ -368,7 +375,23 @@ void displayPersonalDetails(Student s)
     cout << "Emri: " << s.emri << endl;
     cout << "Mbiemri: " << s.mbiemri << endl;
     cout << "Gjuha Zgjedhur: " << returnSpecificLanguage(s.languageChoice) << endl;
+	cout << "Username: " << s.username << endl;
+	cout << "Email: " << s.email << endl;
+	cout << "Birthdate: " << s.birthdate << endl;
 }
+void changePersonalDetails(Student& s)
+{
+    cout << "Nese nuk doni te ndryshoni nje fushe, shtypni '-' ne vend te saj." << endl;
+	cout << "Vendosni username te ri: ";
+	cin >> s.username;
+	cout << "Vendosni email te ri: ";
+	cin >> s.email;
+	cout << "Vendosni date te lindjes (DD/MM/YYYY): ";
+	cin >> s.birthdate;
+	cout << "Vendosni numrin e telefonit: ";
+	cin >> s.phoneNumber;
+    }
+
 
 Student krijoStudentin()
 {
@@ -394,8 +417,6 @@ Student krijoStudentin()
 
     newStudent.languageChoice = returnLanguageChoosen(choice);
 
-    displayPersonalDetails(newStudent);
-
     return newStudent;
 }
 
@@ -413,6 +434,8 @@ AppOptions returnParticularOption(int choosen_option)
         return SeeUserProgress;
     case 5:
         return BackToStart;
+	case 6:
+		return viewProfile;
     }
 }
 
@@ -527,6 +550,19 @@ void executeOptionChoosenFromMenu(AppOptions option, Student s)
     case BackToStart:
         // Ka me u implementu ma vone
         break;
+	case viewProfile:
+		cout << "\n--- Your Profile Details ---\n";
+		displayPersonalDetails(s);
+		cout << "A doni te ndryshoni detajet personale? (Y/N): ";
+		char changeChoice;
+		cin >> changeChoice;
+        if (changeChoice == 'Y' || changeChoice == 'y') {
+            changePersonalDetails(s);
+            cout << "Detajet personale u ndryshuan me sukses!\n";
+            displayPersonalDetails(s);
+		}
+
+		break;
     }
 }
 
@@ -538,7 +574,8 @@ void displayOptions()
         returnSpecificOption(SeeTranslations),
         returnSpecificOption(SeeWordOfTheDay),
         returnSpecificOption(SeeUserProgress),
-        returnSpecificOption(BackToStart)
+        returnSpecificOption(BackToStart),
+		returnSpecificOption(viewProfile)
     };
 
     cout << "Qfare Deshironi Te Beni Ne Programin Tone: " << endl;
