@@ -67,6 +67,131 @@ struct StudentProgress
     ProgressStructure progress;
 };
 
+void showTranslations(Language lang)
+{
+    cout << "\n--- BASIC TRANSLATIONS ---\n";
+
+    unordered_map<string, string> translations;
+
+    switch (lang)
+    {
+    case GERMAN:
+        translations = {
+            {"Hello", "Hallo"},
+            {"Goodbye", "Tschüss"},
+            {"Yes", "Ja"},
+            {"No", "Nein"},
+            {"Thank you", "Danke"},
+            {"Please", "Bitte"},
+            {"Book", "Buch"},
+            {"Water", "Wasser"},
+            {"Food", "Essen"},
+            {"House", "Haus"},
+            {"Friend", "Freund"},
+            {"Family", "Familie"},
+            {"School", "Schule"},
+            {"Student", "Student"},
+            {"Teacher", "Lehrer"},
+            {"Day", "Tag"},
+            {"Night", "Nacht"}
+        };
+        break;
+
+    case ITALIAN:
+        translations = {
+            {"Hello", "Ciao"},
+            {"Goodbye", "Addio"},
+            {"Yes", "Si"},
+            {"No", "No"},
+            {"Thank you", "Grazie"},
+            {"Please", "Per favore"},
+            {"Book", "Libro"},
+            {"Water", "Acqua"},
+            {"Food", "Cibo"},
+            {"House", "Casa"},
+            {"Friend", "Amico"},
+            {"Family", "Famiglia"},
+            {"School", "Scuola"},
+            {"Student", "Studente"},
+            {"Teacher", "Insegnante"},
+            {"Day", "Giorno"},
+            {"Night", "Notte"}
+        };
+        break;
+
+    case SPANISH:
+        translations = {
+            {"Hello", "Hola"},
+            {"Goodbye", "Adios"},
+            {"Yes", "Si"},
+            {"No", "No"},
+            {"Thank you", "Gracias"},
+            {"Please", "Por favor"},
+            {"Book", "Libro"},
+            {"Water", "Agua"},
+            {"Food", "Comida"},
+            {"House", "Casa"},
+            {"Friend", "Amigo"},
+            {"Family", "Familia"},
+            {"School", "Escuela"},
+            {"Student", "Estudiante"},
+            {"Teacher", "Profesor"},
+            {"Day", "Dia"},
+            {"Night", "Noche"}
+        };
+        break;
+
+    case FRENCH:
+        translations = {
+            {"Hello", "Bonjour"},
+            {"Goodbye", "Au revoir"},
+            {"Yes", "Oui"},
+            {"No", "Non"},
+            {"Thank you", "Merci"},
+            {"Please", "S'il vous plait"},
+            {"Book", "Livre"},
+            {"Water", "Eau"},
+            {"Food", "Nourriture"},
+            {"House", "Maison"},
+            {"Friend", "Ami"},
+            {"Family", "Famille"},
+            {"School", "Ecole"},
+            {"Student", "Etudiant"},
+            {"Teacher", "Professeur"},
+            {"Day", "Jour"},
+            {"Night", "Nuit"}
+        };
+        break;
+
+    case ALBANIAN:
+        translations = {
+            {"Hello", "Pershendetje"},
+            {"Goodbye", "Mirupafshim"},
+            {"Yes", "Po"},
+            {"No", "Jo"},
+            {"Thank you", "Faleminderit"},
+            {"Please", "Ju lutem"},
+            {"Book", "Liber"},
+            {"Water", "Uje"},
+            {"Food", "Ushqim"},
+            {"House", "Shtepi"},
+            {"Friend", "Mik"},
+            {"Family", "Familje"},
+            {"School", "Shkolle"},
+            {"Student", "Student"},
+            {"Teacher", "Mesues"},
+            {"Day", "Dite"},
+            {"Night", "Nate"}
+        };
+        break;
+    }
+
+    for (const auto& pair : translations)
+    {
+        cout << pair.first << " -> " << pair.second << endl;
+    }
+}
+
 
 const QuizStructure quizes[] = {
     {
@@ -391,7 +516,7 @@ void executeOptionChoosenFromMenu(AppOptions option, Student s)
         TakeTheQuiz(s);
         break;
     case SeeTranslations:
-        // Ka me u implementu ma vone
+        showTranslations(s.languageChoice);
         break;
     case SeeWordOfTheDay:
         // Ka me u implementu ma vone
@@ -444,4 +569,3 @@ int main()
 
 
 }
-
